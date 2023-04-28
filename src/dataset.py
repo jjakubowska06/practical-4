@@ -191,14 +191,14 @@ if __name__ == '__main__':
         corruption_dataset = CharCorruptionDataset(open('wiki.txt', encoding="utf8").read(), 128) 
         # Make the name dataset
         name_dataset = NameDataset(corruption_dataset,
-            open('birth_places_train.tsv', encoding="cp437").read())
+            open('birth_places_train.tsv', encoding="utf-8").read())
         for _, example in zip(range(4), name_dataset):
             x, y = example
             print('x:', ''.join([name_dataset.itos[int(c)] for c in x]))
             print('y:', ''.join([name_dataset.itos[int(c)] for c in y]))
         pass
     elif args.dataset_type == 'charcorruption':
-        corruption_dataset = CharCorruptionDataset(open('wiki.txt', encoding="cp437").read(), 128) 
+        corruption_dataset = CharCorruptionDataset(open('wiki.txt', encoding="utf-8").read(), 128) 
         for _, example in zip(range(10), corruption_dataset):
             x, y = example
             print('x:', ''.join([corruption_dataset.itos[int(c)] for c in x]))

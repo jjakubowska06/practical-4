@@ -76,7 +76,7 @@ if __name__=="__main__":
     # (that is, the same mapping from character to integer, and we build the 
     # vocab from the pretraining corpus.)
     block_size = 128
-    text = open(args.pretrain_corpus_path, encoding='cp437').read()
+    text = open(args.pretrain_corpus_path, encoding='utf-8').read()
     pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
 
     # We don't suggest you change these hyperparameters, as they're known to work.
@@ -142,7 +142,7 @@ if __name__=="__main__":
 
         # text = open(args.finetune_corpus_path, 'r', encoding="utf-8").read()
         finetuning_dataset = dataset.NameDataset(pretrain_dataset,
-            open(args.finetune_corpus_path, 'r', encoding="cp437").read())
+            open(args.finetune_corpus_path, 'r', encoding="utf-8").read())
 
         trainer = trainer.Trainer(gpt_model, finetuning_dataset, None, tconf)
         trainer.train()
