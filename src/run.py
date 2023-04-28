@@ -77,7 +77,7 @@ if __name__=="__main__":
     # vocab from the pretraining corpus.)
     block_size = 128
     text = open(args.pretrain_corpus_path, encoding='cp437').read()
-    pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
+    pretrain_dataset = dataset.NameDataset(text, block_size)
 
     # We don't suggest you change these hyperparameters, as they're known to work.
     # use them for both the vanilla and the synthesizer models
