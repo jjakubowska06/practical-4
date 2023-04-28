@@ -90,7 +90,7 @@ if __name__=="__main__":
 
     if args.variant == 'vanilla':
         # TODO [part c]: Define some model here
-        gpt_model = model.GPT(mconf)
+        gpt_model = model.GPT(mconf, reid=True)
         
     # From here on, your code should be identical independent of which
     # variant (vanilla or synthesizer) has been chosen.
@@ -130,6 +130,7 @@ if __name__=="__main__":
         #     3. Save the resulting model in args.writing_params_path
         if args.reading_params_path is not None:
             params = args.reading_params_path
+            print(params)
         else:
             params = {"max_epochs":75, "batch_size":256, "learning_rate": 6e-4, "lr_decay": True,
                     "warmup_tokens": 512*20, "final_tokens": 200*len(pretrain_dataset)*block_size, 
