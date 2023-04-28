@@ -145,6 +145,8 @@ if __name__=="__main__":
 
         trainer = trainer.Trainer(gpt_model, finetuning_dataset, None, tconf)
         trainer.train()
+        trainer.save_checkpoint()
+
         
         # - Make sure to use the following hyperparameters:
         #     Hyperparameters for finetuning WITHOUT a pretrained model:
