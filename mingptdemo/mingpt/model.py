@@ -8,6 +8,9 @@ GPT model:
 """
 
 import logging
+logging.basicConfig(level = logging.INFO)
+
+
 import math
 
 import torch
