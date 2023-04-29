@@ -155,15 +155,17 @@ if __name__=="__main__":
         #     3. Save the resulting model in args.writing_params_path
         
         if args.reading_params_path is not None:
-            params = open(args.reading_params_path, 'r', encoding='ascii').read()
-            print(params)
+            gpt_model.load_state_dict(torch.load(args.reading_params_path, map_location=torch.device('cpu')))
+            tconf = trainer.TrainerConfig(max_epochs=10, batch_size=256, learning_rate=6e-4,
+                      lr_decay=True, warmup_tokens=512*20, final_tokens=200*len(pretrain_dataset)*block_size,
+                      num_workers=4)
 
         else:
             params = {"max_epochs":75, "batch_size":256, "learning_rate": 6e-4, "lr_decay": True,
                     "warmup_tokens": 512*20, "final_tokens": 200*len(pretrain_dataset)*block_size, 
                     "num_workers":4, "ckpt_path": args.writing_params_path}
         
-        tconf = trainer.TrainerConfig(max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
+            tconf = trainer.TrainerConfig(max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
                         lr_decay=params["lr_decay"], warmup_tokens=params["warmup_tokens"], final_tokens=params["final_tokens"],
                         num_workers=params["num_workers"], ckpt_path=params["ckpt_path"])
         
