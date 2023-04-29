@@ -84,13 +84,13 @@ if __name__=="__main__":
 
     gpt_model = model.GPT(mconf)
 
-    assert args.outputs_path is not None
     assert args.reading_params_path is not None
     assert args.eval_corpus_path is not None
     gpt_model.load_state_dict(torch.load(args.reading_params_path))
     gpt_model = gpt_model.to(device)
     correct = 0
     total = 0
+    print(len(pretrain_dataset.data))
     #baseline = 
     # with open(args.outputs_path, 'w') as fout:
     #             predictions = []
