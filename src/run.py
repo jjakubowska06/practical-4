@@ -109,6 +109,7 @@ if __name__=="__main__":
         # - Goals:
         #     1. Pretrain the model on this corpus
         #     2. Save the resulting model in args.writing_params_path
+
         # - Make sure to use the following hyperparameters for pretraining:
         #     max_epochs=650
         #     batch_size=128
@@ -118,6 +119,20 @@ if __name__=="__main__":
         #     final_tokens=200*len(pretrain_dataset)*block_size
         #     num_workers=4
         raise NotImplementedError
+    
+        params = {"max_epochs":650, "batch_size":128, "learning_rate": 6e-3, "lr_decay": True,
+                "warmup_tokens": 512*20, "final_tokens": 200*len(pretrain_dataset)*block_size, 
+                "num_workers":4, "ckpt_path": args.writing_params_path}
+
+
+        tconf = trainer.TrainerConfig(max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
+                lr_decay=params["lr_decay"], warmup_tokens=params["warmup_tokens"], final_tokens=params["final_tokens"],
+                num_workers=params["num_workers"], ckpt_path=params["ckpt_path"])
+            
+        trainer = trainer.Trainer(gpt_model, pretrain_dataset, None, tconf)
+        trainer.train()
+        trainer.save_checkpoint()
+    
     elif args.function == 'finetune':
         assert args.writing_params_path is not None
         assert args.finetune_corpus_path is not None
@@ -132,15 +147,16 @@ if __name__=="__main__":
         #         into the model
         #     2. Finetune the model on this corpus
         #     3. Save the resulting model in args.writing_params_path
-        if args.reading_params_path is not None:
-            params = args.reading_params_path
+        
+        if args.reading_params_path:
+            params = open(args.reading_params_path, 'r', encoding="utf-8").read()
+            print(params)
+
         else:
             params = {"max_epochs":75, "batch_size":256, "learning_rate": 6e-4, "lr_decay": True,
                     "warmup_tokens": 512*20, "final_tokens": 200*len(pretrain_dataset)*block_size, 
                     "num_workers":4, "ckpt_path": args.writing_params_path}
         
-        pretrain_dataset.vocab_size, pretrain_dataset.block_size,
-
         tconf = trainer.TrainerConfig(max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
                         lr_decay=params["lr_decay"], warmup_tokens=params["warmup_tokens"], final_tokens=params["final_tokens"],
                         num_workers=params["num_workers"], ckpt_path=params["ckpt_path"])
@@ -152,7 +168,6 @@ if __name__=="__main__":
         trainer = trainer.Trainer(gpt_model, finetuning_dataset, None, tconf)
         trainer.train()
         trainer.save_checkpoint()
-
         
         # - Make sure to use the following hyperparameters:
         #     Hyperparameters for finetuning WITHOUT a pretrained model:
@@ -171,6 +186,7 @@ if __name__=="__main__":
         #         warmup_tokens=512*20
         #         final_tokens=200*len(pretrain_dataset)*block_size
         #         num_workers=4
+
     elif args.function == 'evaluate':
         assert args.outputs_path is not None
         assert args.reading_params_path is not None
