@@ -155,7 +155,7 @@ if __name__=="__main__":
         #     3. Save the resulting model in args.writing_params_path
         
         if args.reading_params_path is not None:
-            params = open(args.reading_params_path, 'r', encodin='ascii').read()
+            params = open(args.reading_params_path, 'r', encoding='ascii').read()
             print(params)
 
         else:
