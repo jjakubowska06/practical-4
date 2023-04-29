@@ -90,7 +90,7 @@ if __name__=="__main__":
 
     if args.variant == 'vanilla':
         # TODO [part c]: Define some model here
-        gpt_model = model.GPT(mconf, reid=True)
+        gpt_model = model.GPT(mconf)
         
     # From here on, your code should be identical independent of which
     # variant (vanilla or synthesizer) has been chosen.
@@ -141,7 +141,6 @@ if __name__=="__main__":
                         num_workers=params["num_workers"], ckpt_path=params["ckpt_path"])
         
 
-        # text = open(args.finetune_corpus_path, 'r', encoding="utf-8").read()
         finetuning_dataset = dataset.NameDataset(pretrain_dataset,
             open(args.finetune_corpus_path, 'r', encoding="utf-8").read())
 
