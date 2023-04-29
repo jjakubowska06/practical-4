@@ -30,16 +30,14 @@ if __name__=="__main__":
     assert args.eval_corpus_path is not None
     correct = 0
     total = 0
-    with open(args.outputs_path, 'w') as fout:
-        predictions = []
-        for line in tqdm(open(args.eval_corpus_path)):
-            x = line.split('\t')[0]
-            x = x + '⁇'
-            x = torch.tensor([pretrain_dataset.stoi[s] for s in x], dtype=torch.long)[None, ...].to(device)
-            pred = "London"
-            predictions.append(pred)
-            fout.write(pred + '\n')
-        total, correct = run.evaluate_places(args.eval_corpus_path, predictions)
+    predictions = []
+    for line in tqdm(open(args.eval_corpus_path)):
+        x = line.split('\t')[0]
+        x = x + '⁇'
+        x = torch.tensor([pretrain_dataset.stoi[s] for s in x], dtype=torch.long)[None, ...]
+        pred = "London"
+        predictions.append(pred)
+    total, correct = run.evaluate_places(args.eval_corpus_path, predictions)
     if total > 0:
         print('Correct: {} out of {}: {}%'.format(correct, total, correct/total*100))
     else:
