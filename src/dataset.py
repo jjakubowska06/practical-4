@@ -33,7 +33,7 @@ class NameDataset(Dataset):
         self.itos = pretraining_dataset.itos 
         self.stoi = pretraining_dataset.stoi 
         self.block_size = pretraining_dataset.block_size
-        self.data = list(data.encode('utf-8').decode('ascii', errors='ignore').split('\n'))
+        self.data = list(data.encode('utf-8').decode('utf-8', errors='ignore').split('\n'))
 
     def __len__(self):
         # returns the length of the dataset
@@ -166,33 +166,35 @@ class CharCorruptionDataset(Dataset):
         self.vocab_size = vocab_size
         self.data = data.split('\n')
 
+        
     def __len__(self):
         # returns the length of the dataset
         return len(self.data)
 
     def __getitem__(self, idx):
-        # TODO [part e]: see detailed specification above.
+        # TODO [part e]: see detailed specification above.     
         document = self.data[idx]
 
         #truncate the document
         min_length = 4
-        max_length = int(self.block_size * 7/8)
+        max_length = int(self.block_size * 7/8 + 1)
         length = random.randint(min_length, max_length)
+        trun_document = document[:length]
+        
         trun_document = document[:length]
 
         #break into substrings
-        masked_content_length = random.randint(length//8, length//2)
+        masked_content_length = int(np.random.normal(1/4*length, 3))
         prefix_length = random.randint(0, length - masked_content_length)
+        suffix_len = length - masked_content_length - prefix_length
         prefix = trun_document[:prefix_length]
-        masked_content = trun_document[prefix_length:prefix_length + masked_content_length]
-        suffix = trun_document[prefix_length + masked_content_length:] if (prefix_length + masked_content_length) < length else ""
-        
-        assert (prefix + masked_content + suffix) == trun_document, "Error: Document not divided correctly"
-        
+        masked_content = trun_document[prefix_length : prefix_length + masked_content_length]
+        suffix = trun_document[prefix_length + masked_content_length:] if suffix_len > 0 else ""
+                
         # 3. Rearrange these substrings into the following form: [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] [pads]
-        
-        masked_string = prefix + self.MASK_CHAR + suffix + self.MASK_CHAR + masked_content + self.PAD_CHAR * (self.block_size - length - 2)
-        
+        masked_string = prefix + self.MASK_CHAR + suffix + self.MASK_CHAR + masked_content # Rearrange.
+        masked_string  += self.PAD_CHAR * (self.block_size - len(masked_string ))  # Pad to block_size.
+
         # We now use masked_string to construct the input and output example pair.
         input = masked_string[:-1]
         output = masked_string[1:]

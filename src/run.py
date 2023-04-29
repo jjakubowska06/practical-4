@@ -79,8 +79,7 @@ if __name__=="__main__":
     # (that is, the same mapping from character to integer, and we build the 
     # vocab from the pretraining corpus.)
     block_size = 128
-    print(args.pretrain_corpus_path)
-    text = open(args.pretrain_corpus_path, encoding='utf-8').read()
+    text = open(args.pretrain_corpus_path, encoding='utf8').read()
     pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
 
     # We don't suggest you change these hyperparameters, as they're known to work.
@@ -122,13 +121,20 @@ if __name__=="__main__":
     
         params = {"max_epochs":650, "batch_size":128, "learning_rate": 6e-3, "lr_decay": True,
                 "warmup_tokens": 512*20, "final_tokens": 200*len(pretrain_dataset)*block_size, 
-                "num_workers":3, "ckpt_path": args.writing_params_path}
+                "num_workers":0, "ckpt_path": args.writing_params_path}
 
 
+        # tconf = trainer.TrainerConfig(max_epochs=650, batch_size=128, learning_rate=6e-3,
+        #             lr_decay=True, warmup_tokens=512 * 20, final_token=200 * len(pretrain_dataset) * block_size,
+        #             num_workers=4)
+        
         tconf = trainer.TrainerConfig(max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
-                lr_decay=params["lr_decay"], warmup_tokens=params["warmup_tokens"], final_tokens=params["final_tokens"],
-                num_workers=params["num_workers"], ckpt_path=params["ckpt_path"])
-            
+                        lr_decay=params["lr_decay"], warmup_tokens=params["warmup_tokens"], final_tokens=params["final_tokens"],
+                        num_workers=params["num_workers"], ckpt_path=params["ckpt_path"])
+            # max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
+            #     lr_decay=params["lr_decay"], warmup_tokens=params["warmup_tokens"], final_tokens=params["final_tokens"],
+            #     num_workers=params["num_workers"], ckpt_path=params["ckpt_path"])
+                    
         trainer = trainer.Trainer(gpt_model, pretrain_dataset, None, tconf)
         trainer.train()
         trainer.save_checkpoint()
@@ -148,7 +154,7 @@ if __name__=="__main__":
         #     2. Finetune the model on this corpus
         #     3. Save the resulting model in args.writing_params_path
         
-        if args.reading_params_path:
+        if args.reading_params_path is not None:
             params = open(args.reading_params_path, 'r', encoding="utf-8").read()
             print(params)
 

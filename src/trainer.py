@@ -72,13 +72,17 @@ class Trainer:
         optimizer = optim.AdamW(optim_groups, lr=config.learning_rate, betas=config.betas)
 
         def run_epoch(split):
-            is_train = split == 'train'
+            is_train = (split == 'train')
             model.train(is_train)
             data = self.train_dataset if is_train else self.test_dataset
-            loader = DataLoader(data, batch_size=config.batch_size, num_workers=config.num_workers)
+            loader = DataLoader(data, shuffle=True, pin_memory=True,
+                                batch_size=config.batch_size,
+                                num_workers=config.num_workers)
 
             losses = []
             pbar = tqdm(enumerate(loader), total=len(loader)) if is_train else enumerate(loader)
+            print(pbar)
+            
             for it, (x, y) in pbar:
 
                 # place data on the correct device
@@ -129,3 +133,4 @@ class Trainer:
                 run_epoch('test')
 
             self.save_checkpoint()
+            
