@@ -155,7 +155,7 @@ if __name__=="__main__":
         else:
             params = {"max_epochs":75, "batch_size":256, "learning_rate": 6e-4, "lr_decay": True,
                     "warmup_tokens": 512*20, "final_tokens": 200*len(pretrain_dataset)*block_size, 
-                    "num_workers":4, "ckpt_path": args.writing_params_path}
+                    "num_workers":0, "ckpt_path": args.writing_params_path}
         
         tconf = trainer.TrainerConfig(max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
                         lr_decay=params["lr_decay"], warmup_tokens=params["warmup_tokens"], final_tokens=params["final_tokens"],
