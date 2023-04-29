@@ -158,7 +158,7 @@ if __name__=="__main__":
             gpt_model.load_state_dict(torch.load(args.reading_params_path, map_location=torch.device('cpu')))
             tconf = trainer.TrainerConfig(max_epochs=10, batch_size=256, learning_rate=6e-4,
                       lr_decay=True, warmup_tokens=512*20, final_tokens=200*len(pretrain_dataset)*block_size,
-                      num_workers=4)
+                      num_workers=4, ckpt_path=params["ckpt_path"])
 
         else:
             params = {"max_epochs":75, "batch_size":256, "learning_rate": 6e-4, "lr_decay": True,
