@@ -81,7 +81,7 @@ if __name__=="__main__":
     block_size = 128
     print(args.pretrain_corpus_path)
     text = open(args.pretrain_corpus_path, encoding='utf-8').read()
-    pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
+    pretrain_dataset = dataset.CharCorruptionDataset(text, block_size).to(device)
 
     # We don't suggest you change these hyperparameters, as they're known to work.
     # use them for both the vanilla and the synthesizer models
