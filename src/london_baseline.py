@@ -79,34 +79,26 @@ if __name__=="__main__":
     text = open(args.pretrain_corpus_path, encoding='utf-8').read()
     pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
 
-    mconf = model.GPTConfig(pretrain_dataset.vocab_size, pretrain_dataset.block_size,
-            n_layer=4, n_head=8, n_embd=256)
 
-    gpt_model = model.GPT(mconf)
-
-    assert args.reading_params_path is not None
+    assert args.outputs_path is not None
     assert args.eval_corpus_path is not None
-    gpt_model.load_state_dict(torch.load(args.reading_params_path))
-    gpt_model = gpt_model.to(device)
+
     correct = 0
     total = 0
-    print(len(pretrain_dataset.data))
-    #baseline = 
-    # with open(args.outputs_path, 'w') as fout:
-    #             predictions = []
-    #             for line in tqdm(open(args.eval_corpus_path)):
-    #                 x = line.split('\t')[0]
-    #                 x = x + '⁇'
-    #                 x = torch.tensor([pretrain_dataset.stoi[s] for s in x], dtype=torch.long)[None, ...].to(device)
-    #                 pred = utils.sample(gpt_model, x, 32, sample=False)[0]
-    #                 completion = ''.join([pretrain_dataset.itos[int(i)] for i in pred])
-    #                 pred = completion.split('⁇')[1]
-    #                 predictions.append(pred)
-    #                 fout.write(pred + '\n')
-    #             total, correct = evaluate_places(args.eval_corpus_path, predictions)
-    #         if total > 0:
-    #             print('Correct: {} out of {}: {}%'.format(correct, total, correct/total*100))
-    #         else:
-    #             print('Predictions written to {}; no targets provided'
-    #                     .format(args.outputs_path))
+    # baseline = 
+    with open(args.outputs_path, 'w') as fout:
+        predictions = []
+        for line in tqdm(open(args.eval_corpus_path)):
+            x = line.split('\t')[0]
+            x = x + '⁇'
+            x = torch.tensor([pretrain_dataset.stoi[s] for s in x], dtype=torch.long)[None, ...].to(device)
+            pred = "London"
+            predictions.append(pred)
+            fout.write(pred + '\n')
+            total, correct = evaluate_places(args.eval_corpus_path, predictions)
+            if total > 0:
+                print('Correct: {} out of {}: {}%'.format(correct, total, correct/total*100))
+            else:
+                print('Predictions written to {}; no targets provided'
+                        .format(args.outputs_path))
 
