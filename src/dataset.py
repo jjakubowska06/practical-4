@@ -181,10 +181,8 @@ class CharCorruptionDataset(Dataset):
         length = random.randint(min_length, max_length)
         trun_document = document[:length]
         
-        trun_document = document[:length]
-
         #break into substrings
-        masked_content_length = int(np.random.normal(1/4*length, 3))
+        masked_content_length = random.randint(length//8, length//2)
         prefix_length = random.randint(0, length - masked_content_length)
         suffix_len = length - masked_content_length - prefix_length
         prefix = trun_document[:prefix_length]
@@ -193,7 +191,7 @@ class CharCorruptionDataset(Dataset):
                 
         # 3. Rearrange these substrings into the following form: [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] [pads]
         masked_string = prefix + self.MASK_CHAR + suffix + self.MASK_CHAR + masked_content # Rearrange.
-        masked_string  += self.PAD_CHAR * (self.block_size - len(masked_string ))  # Pad to block_size.
+        masked_string  += self.PAD_CHAR * (self.block_size - len(masked_string))  # Pad to block_size.
 
         # We now use masked_string to construct the input and output example pair.
         input = masked_string[:-1]
