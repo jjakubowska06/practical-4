@@ -189,7 +189,7 @@ class CharCorruptionDataset(Dataset):
         
         print(length)
         print(prefix + masked_content + suffix)
-        assert prefix + masked_content + suffix == trun_document, print(trun_document, prefix + masked_content + suffix, length,len(prefix + masked_content + suffix)
+        assert prefix + masked_content + suffix == trun_document, print(trun_document, prefix + masked_content + suffix, length,len(prefix + masked_content + suffix))
         
         # 3. Rearrange these substrings into the following form: [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] [pads]
         
