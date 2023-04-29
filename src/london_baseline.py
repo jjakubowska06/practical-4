@@ -95,10 +95,10 @@ if __name__=="__main__":
             pred = "London"
             predictions.append(pred)
             fout.write(pred + '\n')
-            total, correct = evaluate_places(args.eval_corpus_path, predictions)
-            if total > 0:
-                print('Correct: {} out of {}: {}%'.format(correct, total, correct/total*100))
-            else:
-                print('Predictions written to {}; no targets provided'
+        total, correct = evaluate_places(args.eval_corpus_path, predictions)
+    if total > 0:
+        print('Correct: {} out of {}: {}%'.format(correct, total, correct/total*100))
+    else:
+        print('Predictions written to {}; no targets provided'
                         .format(args.outputs_path))
 
