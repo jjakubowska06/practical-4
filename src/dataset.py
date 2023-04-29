@@ -185,7 +185,7 @@ class CharCorruptionDataset(Dataset):
         prefix_length = random.randint(0, length - masked_content_length)
         prefix = trun_document[:prefix_length]
         masked_content = trun_document[prefix_length:prefix_length + masked_content_length]
-        suffix = trun_document[prefix_length + masked_content_length:] if (prefix_length + masked_content_length) < length-1 else ""
+        suffix = trun_document[prefix_length + masked_content_length:] if (prefix_length + masked_content_length) < length else ""
         
         assert (prefix + masked_content + suffix) == trun_document, "Error: Document not divided correctly"
         
