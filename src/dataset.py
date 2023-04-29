@@ -172,8 +172,37 @@ class CharCorruptionDataset(Dataset):
 
     def __getitem__(self, idx):
         # TODO [part e]: see detailed specification above.
-    
+        document = self.data[idx]
+
+        #truncate the document
+        min_length = 4
+        max_length = int(self.block_size * 7/8)
+        length = random.randint(min_length, max_length)
+        trun_document = document[:length]
+
+        #break into substrings
+        total_length = len(trun_document)
+
+        masked_content_length = random.randint(total_length//8, total_length//2)
+        prefix_length = random.randint(0, total_length - masked_content_length)
+        prefix = trun_document[:prefix_length]
+        masked_content = trun_document[prefix_length:prefix_length + masked_content_length]
+        suffix = trun_document[prefix_length + masked_content_length:] if (prefix_length + masked_content_length) < length-1 else ""
+        assert prefix + masked_content + suffix == trun_document, "Error: Document not divided correctly"
+        
+        # 3. Rearrange these substrings into the following form: [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] [pads]
+        
+        masked_string = prefix + self.MASK_CHAR + suffix + self.MASK_CHAR + masked_content + self.PAD_CHAR * (self.block_size - length - 2)
+        
+        # We now use masked_string to construct the input and output example pair.
+        input = masked_string[:-1]
+        output = masked_string[1:]
+
+        x = torch.tensor([self.stoi[c] for c in input], dtype=torch.long)
+        y = torch.tensor([self.stoi[c] for c in output], dtype=torch.long)
+
         return x, y
+
 
 """
 Code under here is strictly for your debugging purposes; feel free to modify
