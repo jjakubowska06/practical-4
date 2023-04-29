@@ -187,8 +187,7 @@ class CharCorruptionDataset(Dataset):
         masked_content = trun_document[prefix_length:prefix_length + masked_content_length]
         suffix = trun_document[prefix_length + masked_content_length:] if (prefix_length + masked_content_length) < length-1 else ""
         
-        print(trun_document, prefix + masked_content + suffix, length,len(prefix + masked_content + suffix))
-        #assert prefix + masked_content + suffix == trun_document, "Error: Document not divided correctly"
+        assert (prefix + masked_content + suffix) == trun_document, "Error: Document not divided correctly"
         
         # 3. Rearrange these substrings into the following form: [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] [pads]
         
