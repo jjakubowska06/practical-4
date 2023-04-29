@@ -81,7 +81,7 @@ if __name__=="__main__":
     block_size = 128
     print(args.pretrain_corpus_path)
     text = open(args.pretrain_corpus_path, encoding='utf-8').read()
-    pretrain_dataset = dataset.CharCorruptionDataset(text, block_size).to(device)
+    pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
 
     # We don't suggest you change these hyperparameters, as they're known to work.
     # use them for both the vanilla and the synthesizer models
@@ -122,7 +122,7 @@ if __name__=="__main__":
     
         params = {"max_epochs":650, "batch_size":128, "learning_rate": 6e-3, "lr_decay": True,
                 "warmup_tokens": 512*20, "final_tokens": 200*len(pretrain_dataset)*block_size, 
-                "num_workers":4, "ckpt_path": args.writing_params_path}
+                "num_workers":3, "ckpt_path": args.writing_params_path}
 
 
         tconf = trainer.TrainerConfig(max_epochs=params["max_epochs"], batch_size=params["batch_size"], learning_rate=params["learning_rate"],
