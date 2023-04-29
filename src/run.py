@@ -19,6 +19,9 @@ from mingptdemo.mingpt import model, utils
 import trainer
 import dataset
 
+import logging
+logging.basicConfig(level = logging.INFO)
+
 def evaluate_places(filepath, predicted_places):
   """ Computes percent of correctly predicted birth places.
 
@@ -76,6 +79,7 @@ if __name__=="__main__":
     # (that is, the same mapping from character to integer, and we build the 
     # vocab from the pretraining corpus.)
     block_size = 128
+    print(args.pretrain_corpus_path)
     text = open(args.pretrain_corpus_path, encoding='utf-8').read()
     pretrain_dataset = dataset.CharCorruptionDataset(text, block_size)
 
