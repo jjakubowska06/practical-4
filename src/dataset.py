@@ -181,14 +181,15 @@ class CharCorruptionDataset(Dataset):
         trun_document = document[:length]
 
         #break into substrings
-        total_length = len(trun_document)
-
-        masked_content_length = random.randint(total_length//8, total_length//2)
-        prefix_length = random.randint(0, total_length - masked_content_length)
+        masked_content_length = random.randint(length//8, length//2)
+        prefix_length = random.randint(0, length - masked_content_length)
         prefix = trun_document[:prefix_length]
         masked_content = trun_document[prefix_length:prefix_length + masked_content_length]
         suffix = trun_document[prefix_length + masked_content_length:] if (prefix_length + masked_content_length) < length-1 else ""
-        assert prefix + masked_content + suffix == trun_document, "Error: Document not divided correctly"
+        
+        print(length)
+        print(prefix + masked_content + suffix)
+        assert prefix + masked_content + suffix == trun_document, print(trun_document, prefix + masked_content + suffix, length,len(prefix + masked_content + suffix)
         
         # 3. Rearrange these substrings into the following form: [prefix] MASK_CHAR [suffix] MASK_CHAR [masked_content] [pads]
         
